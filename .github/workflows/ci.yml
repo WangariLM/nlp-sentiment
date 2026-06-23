@@ -1,0 +1,46 @@
+# .github/workflows/ci.yml
+# Runs tests and builds the Docker image on every push to main
+
+name: CI Pipeline
+
+# When this workflow runs
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1 — get the code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2 — set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Step 3 — install dependencies
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest httpx
+
+      # Step 4 — download model from Hugging Face Hub
+      - name: Download model
+        run: |
+          python download_model.py
+
+      # Step 5 — run tests
+      - name: Run tests
+        run: |
+          python -m pytest tests/ -v
+
+      # Step 6 — build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t sentiment-api:ci .
