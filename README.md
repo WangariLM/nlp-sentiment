@@ -76,7 +76,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 **Option A : pull the pre-built image:**
 ```bash
-docker run -d -p 8000:8000 sybil/sentiment-api:v1
+docker run -d -p 8000:8000 wangari/sentiment-api:v1
 ```
 
 **Option B : build it yourself:**
